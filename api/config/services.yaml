@@ -18,3 +18,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Http\Resolver\BodyDtoResolver:
+        tags: [ { name: controller.argument_value_resolver, priority: 200 } ]
+
+    App\Http\Resolver\QueryDtoResolver:
+        tags: [ { name: controller.argument_value_resolver, priority: 190 } ]

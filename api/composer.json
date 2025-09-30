@@ -13,6 +13,8 @@
         "symfony/dotenv": "^7.0",
         "symfony/routing": "^7.0",
         "symfony/serializer": "^7.0",
+        "symfony/property-access": "^7.0",
+        "symfony/messenger": "^7.0",
         "symfony/validator": "^7.0",
         "symfony/cache": "^7.0",
         "symfony/http-client": "^7.0",
@@ -24,7 +26,8 @@
         "nelmio/cors-bundle": "^2.4",
         "predis/predis": "^2.2",
         "symfony/yaml": "^7.3.3",
-        "symfony/flex": "^2.4.7"
+        "symfony/flex": "^2.4.7",
+        "friendsofsymfony/rest-bundle": "^3.5"
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.60",
