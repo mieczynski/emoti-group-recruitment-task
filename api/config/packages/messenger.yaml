@@ -2,7 +2,7 @@ framework:
     messenger:
         default_bus: command.bus
         buses:
-            command.bus:
-                default_middleware: allow_no_handlers
-            query.bus:
+            command.bus: ~
+            query.bus: ~
+            event.bus:
                 default_middleware: allow_no_handlers

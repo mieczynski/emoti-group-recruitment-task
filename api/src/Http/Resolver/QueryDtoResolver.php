@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use ReflectionClass;
+use ReflectionNamedType;
 
 final class QueryDtoResolver implements ValueResolverInterface
 {
@@ -31,9 +33,9 @@ final class QueryDtoResolver implements ValueResolverInterface
         }
 
         $payload = $attr->defaults + $request->query->all();
+        $payload = $this->coerceScalarsToPropertyTypes($payload, $class);
 
-        /** @var object $dto */
-        $dto = $this->serializer->deserialize(json_encode($payload, JSON_THROW_ON_ERROR), $class, 'json');
+        $dto = $this->serializer->denormalize($payload, $class);
 
         $violations = $this->validator->validate($dto);
         if (\count($violations) > 0) {
@@ -49,5 +51,41 @@ final class QueryDtoResolver implements ValueResolverInterface
             return $attribute;
         }
         return null;
+    }
+
+    private function coerceScalarsToPropertyTypes(array $payload, string $class): array
+    {
+        $rc = new ReflectionClass($class);
+        $types = [];
+        foreach ($rc->getProperties() as $prop) {
+            $t = $prop->getType();
+            if ($t instanceof ReflectionNamedType) {
+                $types[$prop->getName()] = $t->getName();
+            }
+        }
+
+        foreach ($payload as $key => $value) {
+            if (!array_key_exists($key, $types)) {
+                continue;
+            }
+            $type = $types[$key];
+            if (is_string($value)) {
+                switch ($type) {
+                    case 'int':
+                        if ($value !== '') { $payload[$key] = (int) $value; }
+                        break;
+                    case 'float':
+                    case 'double':
+                        if ($value !== '') { $payload[$key] = (float) $value; }
+                        break;
+                    case 'bool':
+                        $bool = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                        if ($bool !== null) { $payload[$key] = $bool; }
+                        break;
+                }
+            }
+        }
+
+        return $payload;
     }
 }

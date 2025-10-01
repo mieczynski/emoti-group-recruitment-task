@@ -17,6 +17,10 @@ composer-install:
 	docker compose exec php composer install
 
 
+composer-update:
+	docker compose exec php composer update
+
+
 migrate:
 	docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
 

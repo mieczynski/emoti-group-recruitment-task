@@ -27,7 +27,9 @@
         "predis/predis": "^2.2",
         "symfony/yaml": "^7.3.3",
         "symfony/flex": "^2.4.7",
-        "friendsofsymfony/rest-bundle": "^3.5"
+        "friendsofsymfony/rest-bundle": "^3.5",
+        "ext-bcmath": "*",
+        "doctrine/doctrine-fixtures-bundle": "@stable"
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.60",

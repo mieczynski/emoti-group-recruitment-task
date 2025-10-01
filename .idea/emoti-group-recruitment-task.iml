@@ -23,6 +23,7 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/fakerphp/faker" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/fidry/cpu-core-counter" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/friendsofphp/php-cs-fixer" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/friendsofsymfony/rest-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/myclabs/deep-copy" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/nelmio/cors-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/nikic/php-parser" />
@@ -84,6 +85,7 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/http-foundation" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/http-kernel" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/maker-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/messenger" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/options-resolver" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/password-hasher" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/phpunit-bridge" />
@@ -117,6 +119,10 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/var-exporter" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/yaml" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/theseer/tokenizer" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/willdurand/jsonp-callback-validator" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/willdurand/negotiation" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/doctrine/data-fixtures" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/doctrine/doctrine-fixtures-bundle" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
