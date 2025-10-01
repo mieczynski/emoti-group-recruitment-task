@@ -4,9 +4,17 @@ namespace App\Factory\Reservation;
 
 use App\Entity\Reservation;
 use App\Entity\RoomType;
+use Symfony\Bundle\SecurityBundle\Security;
 
-class ReservationFactory
+readonly class ReservationFactory
 {
+
+    public function __construct(
+        private Security $security
+    )
+    {
+    }
+
     public function buildReservation(
         RoomType $roomType,
         \DateTimeImmutable $start,
@@ -17,6 +25,7 @@ class ReservationFactory
     ): Reservation {
         $reservation = new Reservation($roomType, $start, $end, $guestName, $email);
         $reservation->setTotalPrice($total);
+        $reservation->setUser($this->security->getUser());
         return $reservation;
     }
 

@@ -6,6 +6,7 @@ namespace App\Service\Filter;
 use App\DTO\Reservation\ReservationListParamsDTO;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 final class ReservationQueryFilter
 {
@@ -48,5 +49,12 @@ final class ReservationQueryFilter
         }
 
         $qb->orderBy($field, $dir);
+    }
+
+    public function applyUserScope(QueryBuilder $qb, UserInterface $actor, bool $isAdmin): void
+    {
+        if (!$isAdmin) {
+            $qb->andWhere('r.user = :actor')->setParameter('actor', $actor);
+        }
     }
 }

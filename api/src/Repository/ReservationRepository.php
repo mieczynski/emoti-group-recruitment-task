@@ -9,6 +9,7 @@ use App\Entity\Reservation;
 use App\Service\Filter\ReservationQueryFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 final class ReservationRepository extends ServiceEntityRepository implements ReservationRepositoryInterface
 {
@@ -24,7 +25,7 @@ final class ReservationRepository extends ServiceEntityRepository implements Res
     }
 
 
-    public function findAllByParams(ReservationListParamsDTO $params): array
+    public function findAllByParams(ReservationListParamsDTO $params, UserInterface $user, bool $isAdmin): array
     {
         $qb = $this->createQueryBuilder('r')
             ->leftJoin('r.roomType', 'rt')->addSelect('rt');
@@ -38,6 +39,7 @@ final class ReservationRepository extends ServiceEntityRepository implements Res
             ->getSingleScalarResult();
 
         $this->filter->applySorting($qb, $params);
+        $this->filter->applyUserScope($qb, $user, $isAdmin);
 
         $page  = max(1, $params->page);
         $limit = max(1, $params->limit);

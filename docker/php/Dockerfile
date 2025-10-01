@@ -40,4 +40,6 @@ RUN addgroup -g 1000 -S www-data || true \
 WORKDIR /var/www/html/api
 USER www-data
 
+RUN php bin/console lexik:jwt:generate-keypair --overwrite --no-interaction
+
 CMD ["php-fpm", "-F"]

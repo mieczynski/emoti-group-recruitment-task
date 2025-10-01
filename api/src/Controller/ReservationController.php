@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/reservations')]
 final class ReservationController extends AbstractController
@@ -27,6 +28,7 @@ final class ReservationController extends AbstractController
     }
 
     #[Route('', name: 'post_reservation', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
     public function create(#[FromBody] CreateReservationDTO $dto): JsonResponse
     {
         $result = $this->handle(new CreateReservationCommand($dto));
@@ -36,6 +38,7 @@ final class ReservationController extends AbstractController
     }
 
     #[Route('', name: 'cget_reservations', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
     public function list(#[FromQuery] ReservationListParamsDTO $dto): JsonResponse
     {
         $result = $this->handle(new ListReservationsQuery($dto));

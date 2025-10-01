@@ -8,6 +8,7 @@ use App\Entity\RoomType as RoomTypeEntity;
 use App\Entity\Reservation;
 use App\Entity\ReservationDate;
 use App\Entity\VacancyCalendar;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -17,16 +18,19 @@ final class SampleReservationFixtures extends Fixture implements DependentFixtur
     public function load(ObjectManager $manager): void
     {
         $samples = [
-            [RoomTypeEnum::STANDARD, 'Alice Johnson', 'alice@example.com', 2, new \DateTimeImmutable('today +2 days')],
-            [RoomTypeEnum::DELUXE,   'Bob Smith',     'bob@example.com',   3, new \DateTimeImmutable('today +5 days')],
+            [RoomTypeEnum::STANDARD, 'Alice Johnson', 'alice@example.com', 2, new \DateTimeImmutable('today +2 days'), UserFixtures::USER_DEFAULT],
+            [RoomTypeEnum::DELUXE,   'Bob Smith',     'bob@example.com',   3, new \DateTimeImmutable('today +5 days'), UserFixtures::USER_ADMIN],
         ];
 
-        foreach ($samples as [$type, $guest, $email, $nights, $start]) {
+        foreach ($samples as [$type, $guest, $email, $nights, $start, $userRef]) {
             /** @var RoomTypeEntity $rt */
-            $rt = $this->getReference(RoomTypeFixtures::refKey($type), RoomTypeEntity::class);
-            $end = $start->modify(sprintf('+%d days', $nights));
+            $rt   = $this->getReference(RoomTypeFixtures::refKey($type), RoomTypeEntity::class);
+            /** @var User $user */
+            $user = $this->getReference($userRef, User::class);
 
+            $end = $start->modify(sprintf('+%d days', $nights));
             $reservation = new Reservation($rt, $start, $end, $guest, $email);
+            $reservation->setUser($user);
 
             $total = '0.00';
             for ($d = $start; $d < $end; $d = $d->modify('+1 day')) {
@@ -60,6 +64,6 @@ final class SampleReservationFixtures extends Fixture implements DependentFixtur
 
     public function getDependencies(): array
     {
-        return [VacancyCalendarFixtures::class];
+        return [UserFixtures::class, VacancyCalendarFixtures::class];
     }
 }

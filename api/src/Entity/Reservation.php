@@ -65,6 +65,10 @@ class Reservation
     #[ORM\OneToMany(mappedBy: 'reservation', targetEntity: ReservationDate::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $reservationDates;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'RESTRICT')]
+    private User $user;
+
     public function __construct(
         RoomType $roomType,
         \DateTimeImmutable $startDate,
@@ -72,7 +76,7 @@ class Reservation
         string $guestName,
         string $email
     ) {
-        $this->id = Uuid::v4(); // ✅ generate a real UUID
+        $this->id = Uuid::v4();
         $this->roomType = $roomType;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
@@ -118,6 +122,9 @@ class Reservation
 
     public function getCancelledAt(): ?\DateTimeImmutable { return $this->cancelledAt; }
     public function setCancelledAt(?\DateTimeImmutable $d): self { $this->cancelledAt = $d; return $this; }
+
+    public function getUser(): User { return $this->user; }
+    public function setUser(User $user): self { $this->user = $user; return $this; }
 
     /** @return Collection<int, ReservationDate> */
     public function getReservationDates(): Collection { return $this->reservationDates; }
