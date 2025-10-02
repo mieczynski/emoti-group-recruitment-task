@@ -60,16 +60,4 @@ final class VacancyCalendarRepository extends ServiceEntityRepository implements
             ->setParameter('to', $end, Types::DATE_IMMUTABLE)
             ->execute();
     }
-
-    public function incrementRange(int $roomTypeId, \DateTimeImmutable $start, \DateTimeImmutable $end): void
-    {
-        $em = $this->getEntityManager();
-        $em->createQuery(
-            'UPDATE ' . VacancyCalendar::class . ' vc
-             SET vc.capacityAvailable = vc.capacityAvailable + 1
-             WHERE IDENTITY(vc.roomType) = :rt
-               AND vc.date >= :from AND vc.date < :to'
-        )->setParameters(['rt' => $roomTypeId, 'from' => $start, 'to' => $end])
-            ->execute();
-    }
 }
