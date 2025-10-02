@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Repository\VacancyCalendar;
 
 use App\DTO\Price\AvailabilityDayDTO;
 use App\Entity\VacancyCalendar;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\LockMode;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 final class VacancyCalendarRepository extends ServiceEntityRepository implements VacancyCalendarRepositoryInterface
@@ -59,5 +61,36 @@ final class VacancyCalendarRepository extends ServiceEntityRepository implements
             ->setParameter('from', $start, Types::DATE_IMMUTABLE)
             ->setParameter('to', $end, Types::DATE_IMMUTABLE)
             ->execute();
+    }
+
+    public function fetchRangeReadOnly(?int $roomTypeId, \DateTimeImmutable $from, \DateTimeImmutable $to): array
+    {
+        $qb = $this->createQueryBuilder('vc')
+            ->select('vc.date AS d, vc.capacityAvailable AS c, COALESCE(vc.price, 0) AS p')
+            ->andWhere('vc.date >= :from AND vc.date < :to')
+            ->orderBy('vc.date', 'ASC')
+            ->setParameter('from', $from, Types::DATE_IMMUTABLE)
+            ->setParameter('to', $to, Types::DATE_IMMUTABLE);
+
+        if($roomTypeId){
+            $qb->andWhere('vc.roomType = :rt')
+                ->setParameter('rt', $roomTypeId);
+        }
+
+        $q = $qb->getQuery();
+        $q->setHydrationMode(AbstractQuery::HYDRATE_ARRAY);
+        $q->setHint(Query::HINT_READ_ONLY, true);
+
+        $rows = $q->getResult();
+
+        $out = [];
+        foreach ($rows as $r) {
+            $out[] = new AvailabilityDayDTO(
+                $r['d'],
+                (int)$r['c'],
+                (string)$r['p']
+            );
+        }
+        return $out;
     }
 }

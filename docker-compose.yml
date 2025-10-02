@@ -4,14 +4,16 @@ version: "3.9"
 services:
   php:
     build:
-      context: ./docker/php
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: docker/php/Dockerfile
       args:
         PHP_VERSION: "8.3"
     container_name: booking_php
     working_dir: /var/www/html/api
     volumes:
       - ./:/var/www/html:delegated
+#      - symfony_vendor:/var/www/html/api/vendor
+#      - symfony_var:/var/www/html/api/var
     environment:
       APP_ENV: dev
       PHP_IDE_CONFIG: "serverName=booking"
@@ -98,3 +100,5 @@ services:
 volumes:
   pgdata:
   node_modules:
+#  symfony_vendor:
+#  symfony_var:

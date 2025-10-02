@@ -6,13 +6,9 @@ use App\Entity\Reservation;
 use App\Entity\RoomType;
 use Symfony\Bundle\SecurityBundle\Security;
 
-readonly class ReservationFactory
+readonly class ReservationFactory implements ReservationFactoryInterface
 {
-
-    public function __construct(
-        private Security $security
-    )
-    {
+    public function __construct(private Security $security){
     }
 
     public function buildReservation(

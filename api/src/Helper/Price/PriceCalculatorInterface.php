@@ -9,5 +9,5 @@ interface PriceCalculatorInterface
     /**
      * @param AvailabilityDay[] $days
      */
-    public function sum(array $days): string; // decimal(10,2) as string
+    public function sum(array $days): string;
 }

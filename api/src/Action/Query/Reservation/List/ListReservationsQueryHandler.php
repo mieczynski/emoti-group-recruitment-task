@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Action\Query\Reservation\List;
 
-use App\Repository\ReservationRepositoryInterface;
+use App\Repository\Reservation\ReservationRepositoryInterface;
 use App\Util\Pagination\BuildsPaginatedResponseTrait;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

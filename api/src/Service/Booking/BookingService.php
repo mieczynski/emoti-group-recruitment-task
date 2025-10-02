@@ -7,12 +7,12 @@ use App\DTO\Reservation\CreateReservationDTO;
 use App\Entity\Reservation;
 use App\Entity\ReservationDate;
 use App\Entity\RoomType;
-use App\Factory\Reservation\ReservationFactory;
+use App\Factory\Reservation\ReservationFactoryInterface;
 use App\Helper\Price\PriceCalculatorInterface;
 use App\Infrastructure\Transaction\TransactionManagerInterface;
-use App\Repository\ReservationRepositoryInterface;
-use App\Repository\RoomTypeRepositoryInterface;
-use App\Repository\VacancyCalendarRepositoryInterface;
+use App\Repository\Reservation\ReservationRepositoryInterface;
+use App\Repository\RoomType\RoomTypeRepositoryInterface;
+use App\Repository\VacancyCalendar\VacancyCalendarRepositoryInterface;
 use App\Validator\Booking\BookingValidatorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -23,7 +23,7 @@ final readonly class BookingService implements BookingServiceInterface
         private VacancyCalendarRepositoryInterface $vacancyCalendarRepository,
         private ReservationRepositoryInterface     $reservationRepository,
         private PriceCalculatorInterface           $priceCalculator,
-        private ReservationFactory                 $reservationFactory,
+        private ReservationFactoryInterface        $reservationFactory,
         private TransactionManagerInterface        $transactionManager,
         private EntityManagerInterface             $entityManager,
         private BookingValidatorInterface          $validator,

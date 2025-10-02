@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Repository\RoomType;
 
 use App\Entity\RoomType;
 use App\Exception\Booking\RoomTypeNotFoundException;

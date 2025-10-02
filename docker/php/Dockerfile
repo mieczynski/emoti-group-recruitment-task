@@ -4,9 +4,15 @@ FROM php:${PHP_VERSION}-fpm-alpine
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
+# Runtime libs (persist in final image) — add libzip here
 RUN apk add --no-cache \
-    bash git curl icu icu-libs libpng libjpeg-turbo freetype postgresql-libs
+    bash git curl \
+    icu icu-libs \
+    libpng libjpeg-turbo freetype \
+    postgresql-libs \
+    libzip
 
+# Build deps (removed later)
 RUN apk add --no-cache --virtual .build-deps \
       $PHPIZE_DEPS \
       icu-dev libzip-dev postgresql-dev \
@@ -20,26 +26,23 @@ RUN apk add --no-cache --virtual .build-deps \
 
 COPY --from=composer:2.7 /usr/bin/composer /usr/local/bin/composer
 
-RUN echo "xdebug.start_with_request=trigger" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.discover_client_host=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.client_port=9000" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.idekey=PHPSTORM" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.remote_port=9000" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.remote_autostart=0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.remote_connect_back=0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-
-COPY php.ini /usr/local/etc/php/php.ini
+# Xdebug 3 config (v2 keys removed)
+RUN { \
+      echo "xdebug.mode=debug"; \
+      echo "xdebug.start_with_request=trigger"; \
+      echo "xdebug.discover_client_host=1"; \
+      echo "xdebug.client_host=host.docker.internal"; \
+      echo "xdebug.client_port=9000"; \
+      echo "xdebug.idekey=PHPSTORM"; \
+    } >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 RUN addgroup -g 1000 -S www-data || true \
  && adduser  -u 1000 -S -D -G www-data www-data || true \
  && chown -R www-data:www-data /var/www
 
 WORKDIR /var/www/html/api
-USER www-data
 
-RUN php bin/console lexik:jwt:generate-keypair --overwrite --no-interaction
-
+COPY docker/php/entrypoint.sh /entrypoint.sh
+RUN sed -i "s/\r$//" /entrypoint.sh && chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm", "-F"]

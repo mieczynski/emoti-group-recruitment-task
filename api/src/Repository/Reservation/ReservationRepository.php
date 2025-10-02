@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Repository\Reservation;
 
 use App\DTO\Reservation\ReservationListParamsDTO;
 use App\Entity\Reservation;
