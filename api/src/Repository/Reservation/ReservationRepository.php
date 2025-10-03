@@ -24,7 +24,6 @@ final class ReservationRepository extends ServiceEntityRepository implements Res
         $em->persist($reservation);
     }
 
-
     public function findAllByParams(ReservationListParamsDTO $params, UserInterface $user, bool $isAdmin): array
     {
         $qb = $this->createQueryBuilder('r')

@@ -11,5 +11,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 interface ReservationRepositoryInterface
 {
     public function save(Reservation $reservation): void;
+    /** @return array<Reservation> */
     public function findAllByParams(ReservationListParamsDTO $params, UserInterface $user, bool $isAdmin): array;
 }

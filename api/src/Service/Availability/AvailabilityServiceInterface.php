@@ -8,6 +8,6 @@ use App\DTO\Availability\FreeTermDTO;
 
 interface AvailabilityServiceInterface
 {
-    /** @return list<FreeTermDTO> */
+    /** @return array<FreeTermDTO> */
     public function find(AvailabilityListParamsDTO $dto): array;
 }

@@ -7,6 +7,9 @@ trait BuildsPaginatedResponseTrait
 {
     /**
      * @param iterable $items
+     * @param int $total
+     * @param int $page
+     * @param int $limit
      * @return array{data: iterable, meta: array{page:int,limit:int,total:int,pages:int}}
      */
     private function buildPaginatedResponse(iterable $items, int $total, int $page, int $limit): array
