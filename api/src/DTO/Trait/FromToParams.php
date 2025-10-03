@@ -8,11 +8,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait FromToParams
 {
-    #[Assert\NotNull]
     #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
     public ?\DateTimeImmutable $from = null;
 
-    #[Assert\NotNull]
     #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
     public ?\DateTimeImmutable $to = null;
 
