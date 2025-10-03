@@ -21,6 +21,7 @@ class AvailabilityListParamsDTO
     #[Assert\NotNull]
     #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
     public ?\DateTimeImmutable $to = null;
+
     #[Assert\Positive]
     public ?int $nights = null;
 
