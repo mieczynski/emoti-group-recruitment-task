@@ -1,54 +1,22 @@
-import { useEffect, useState } from 'react'
-
-
-interface AvailabilityDay { date: string; capacity_available: number; price?: number }
-
+import { Routes, Route, Navigate } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
+import AvailabilityPage from './pages/AvailabilityPage';
+import ReservationPage from './pages/ReservationPage';
+import NavBar from './components/NavBar';
+import { useAuth } from './hooks/useAuth';
 
 export default function App() {
-    const [data, setData] = useState<AvailabilityDay[]>([])
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
-
-
-    useEffect(() => {
-        const fetchAvailability = async () => {
-            try {
-                setLoading(true)
-                setError(null)
-                const from = new Date()
-                const to = new Date()
-                to.setDate(from.getDate() + 7)
-                const qs = new URLSearchParams({
-                    from: from.toISOString().slice(0, 10),
-                    to: to.toISOString().slice(0, 10),
-                    roomTypeId: '1'
-                })
-                const res = await fetch(`/api/availability?${qs.toString()}`)
-                if (!res.ok) throw new Error(`HTTP ${res.status}`)
-                const json = await res.json()
-                setData(json?.data ?? json)
-            } catch (e: any) {
-                setError(e.message)
-            } finally {
-                setLoading(false)
-            }
-        }
-        fetchAvailability()
-    }, [])
-
+    const { isAuthenticated } = useAuth();
 
     return (
-        <div style={{ padding: 24, fontFamily: 'system-ui, sans-serif' }}>
-            <h1>Booking Availability (next 7 days)</h1>
-            {loading && <p>Loading…</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <ul>
-                {data.map((d) => (
-                    <li key={d.date}>
-                        {d.date}: {d.capacity_available} available{d.price != null ? `, €${d.price}` : ''}
-                    </li>
-                ))}
-            </ul>
+        <div className="app">
+            {isAuthenticated && <NavBar />}
+            <Routes>
+                <Route path="/login" element={isAuthenticated ? <Navigate to="/availability" replace /> : <LoginPage/>} />
+                <Route path="/availability" element={isAuthenticated ? <AvailabilityPage/> : <Navigate to="/login" replace />} />
+                <Route path="/my-reservations" element={isAuthenticated ? <ReservationPage/> : <Navigate to="/login" replace />} />
+                <Route path="*" element={<Navigate to={isAuthenticated ? "/availability" : "/login"} replace />} />
+            </Routes>
         </div>
-    )
+    );
 }
