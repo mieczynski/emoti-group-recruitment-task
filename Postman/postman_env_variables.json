@@ -1,0 +1,23 @@
+{
+  "id": "f4d94d9a-5f3a-4e1a-a2ab-9a0c6e6e7b3e",
+  "name": "Emoti Booking (Local)",
+  "values": [
+    { "key": "baseUrl", "value": "http://localhost:8080", "type": "text" },
+    { "key": "email", "value": "user@example.com", "type": "text" },
+    { "key": "password", "value": "password", "type": "text" },
+    { "key": "accessToken", "value": "", "type": "text" },
+    { "key": "refreshToken", "value": "", "type": "text" },
+    { "key": "roomTypeId", "value": "1", "type": "text" },
+    { "key": "from", "value": "2025-10-10", "type": "text" },
+    { "key": "to", "value": "2025-10-20", "type": "text" },
+    { "key": "nights", "value": "", "type": "text" },
+    { "key": "minCapacity", "value": "1", "type": "text" },
+    { "key": "startDate", "value": "2025-10-10", "type": "text" },
+    { "key": "endDate", "value": "2025-10-12", "type": "text" },
+    { "key": "page", "value": "1", "type": "text" },
+    { "key": "limit", "value": "20", "type": "text" }
+  ],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_using": "Postman",
+  "_postman_exported_at": "2025-10-03T00:00:00.000Z"
+}

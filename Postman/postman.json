@@ -1,17 +1,8 @@
-
----
-
-# Postman Collection
-
-Create directory `postman/` and add the two files below.
-
-### `postman/EmotiBooking.postman_collection.json`
-```json
 {
   "info": {
     "name": "Emoti Booking API",
     "_postman_id": "6b0f77b3-9b3d-4a8e-9f1d-2d2b2d0f7b10",
-    "description": "Collection for Emoti Booking API (auth, room types, availability, reservations).",
+    "description": "Collection for Emoti Booking API (auth login, room types, availability, reservations).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -42,57 +33,6 @@ Create directory `postman/` and add the two files below.
                   "if (json.token) pm.environment.set('accessToken', json.token);\n",
                   "if (json.refresh_token) pm.environment.set('refreshToken', json.refresh_token);\n",
                   "pm.test('Got access token', function () { pm.expect(pm.environment.get('accessToken')).to.be.ok; });\n"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ]
-        },
-        {
-          "name": "Refresh",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": { "raw": "{{baseUrl}}/api/auth/refresh", "host": ["{{baseUrl}}"], "path": ["api","auth","refresh"] },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"refresh_token\": \"{{refreshToken}}\"\n}"
-            }
-          },
-          "response": [],
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "let json = {};\n",
-                  "try { json = pm.response.json(); } catch(e) {}\n",
-                  "if (json.token) pm.environment.set('accessToken', json.token);\n",
-                  "if (json.refresh_token) pm.environment.set('refreshToken', json.refresh_token);\n",
-                  "pm.test('Refreshed token', function () { pm.expect(pm.environment.get('accessToken')).to.be.ok; });\n"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ]
-        },
-        {
-          "name": "Logout",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
-            ],
-            "url": { "raw": "{{baseUrl}}/api/auth/logout", "host": ["{{baseUrl}}"], "path": ["api","auth","logout"] }
-          },
-          "response": [],
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('204 No Content', function () { pm.response.to.have.status(204); });\n",
-                  "pm.environment.unset('accessToken');\n"
                 ],
                 "type": "text/javascript"
               }
