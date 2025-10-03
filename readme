@@ -1,0 +1,19 @@
+# Emoti Group – Booking API (Symfony) + Frontend (React)
+
+A Dockerized demo stack:
+
+- **Symfony API** (in `api/`) with CQRS, DTO validation, JWT auth, room types, availability finder, reservations
+- **PostgreSQL** for data, **Redis** for caching/blacklist
+- **React (Vite)** simple frontend (login, availability & reservation, my reservations)
+- **Nginx** as web server for PHP-FPM
+
+## Prerequisites
+
+- Docker & Docker Compose
+- Ports free: `8080` (API via Nginx), `5173` (Vite dev), `5432` (Postgres), `6379` (Redis)
+
+## Quick start
+
+```bash
+chmod +x run.sh
+./run.sh up

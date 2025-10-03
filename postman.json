@@ -1,0 +1,172 @@
+
+---
+
+# Postman Collection
+
+Create directory `postman/` and add the two files below.
+
+### `postman/EmotiBooking.postman_collection.json`
+```json
+{
+  "info": {
+    "name": "Emoti Booking API",
+    "_postman_id": "6b0f77b3-9b3d-4a8e-9f1d-2d2b2d0f7b10",
+    "description": "Collection for Emoti Booking API (auth, room types, availability, reservations).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let json = {};\n",
+                  "try { json = pm.response.json(); } catch(e) {}\n",
+                  "if (json.token) pm.environment.set('accessToken', json.token);\n",
+                  "if (json.refresh_token) pm.environment.set('refreshToken', json.refresh_token);\n",
+                  "pm.test('Got access token', function () { pm.expect(pm.environment.get('accessToken')).to.be.ok; });\n"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Refresh",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/refresh", "host": ["{{baseUrl}}"], "path": ["api","auth","refresh"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refreshToken}}\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let json = {};\n",
+                  "try { json = pm.response.json(); } catch(e) {}\n",
+                  "if (json.token) pm.environment.set('accessToken', json.token);\n",
+                  "if (json.refresh_token) pm.environment.set('refreshToken', json.refresh_token);\n",
+                  "pm.test('Refreshed token', function () { pm.expect(pm.environment.get('accessToken')).to.be.ok; });\n"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/auth/logout", "host": ["{{baseUrl}}"], "path": ["api","auth","logout"] }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('204 No Content', function () { pm.response.to.have.status(204); });\n",
+                  "pm.environment.unset('accessToken');\n"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Room Types",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": { "raw": "{{baseUrl}}/api/room-types", "host": ["{{baseUrl}}"], "path": ["api","room-types"] }
+      },
+      "response": []
+    },
+    {
+      "name": "Availability – Search",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/availability?roomTypeId={{roomTypeId}}&from={{from}}&to={{to}}&nights={{nights}}&minCapacity={{minCapacity}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","availability"],
+          "query": [
+            { "key": "roomTypeId", "value": "{{roomTypeId}}" },
+            { "key": "from", "value": "{{from}}" },
+            { "key": "to", "value": "{{to}}" },
+            { "key": "nights", "value": "{{nights}}" },
+            { "key": "minCapacity", "value": "{{minCapacity}}" }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Reservations – Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": { "raw": "{{baseUrl}}/api/reservations", "host": ["{{baseUrl}}"], "path": ["api","reservations"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"startDate\": \"{{startDate}}\",\n  \"endDate\": \"{{endDate}}\",\n  \"guestName\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"roomTypeId\": {{roomTypeId}}\n}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Reservations – List (mine)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/reservations?page={{page}}&limit={{limit}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","reservations"],
+          "query": [
+            { "key": "page", "value": "{{page}}" },
+            { "key": "limit", "value": "{{limit}}" }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" }
+  ]
+}
