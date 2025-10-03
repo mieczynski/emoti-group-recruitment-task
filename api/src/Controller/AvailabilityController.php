@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Action\Query\Availability\Find\FindAvailabilityQuery;
-use App\Action\Query\Availability\List\ListRoomTypesQuery;
+use App\Action\Query\Availability\List\ListAvailabilitiesQuery;
 use App\DTO\Availability\AvailabilityListParamsDTO;
 use App\Http\Attribute\FromQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +25,7 @@ final class AvailabilityController extends AbstractController
     #[Route('', name: 'cget_availabilities', methods: ['GET'])]
     public function list(#[FromQuery] AvailabilityListParamsDTO $dto): JsonResponse
     {
-        $result = $this->handle(new ListRoomTypesQuery($dto));
+        $result = $this->handle(new ListAvailabilitiesQuery($dto));
         return $this->json($result, 200, [], ['groups' => ['availability:read']]);
     }
 }
