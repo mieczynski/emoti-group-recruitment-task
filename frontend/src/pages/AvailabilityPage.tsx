@@ -75,12 +75,23 @@ export default function AvailabilityPage() {
     }
 
     return (
-        <div style={{maxWidth:960, margin:'24px auto', padding:12}}>
+        <div style={{maxWidth: 960, margin: '24px auto', padding: 12}}>
             <h2>Find available terms</h2>
 
-            <div style={{display:'grid', gridTemplateColumns:'repeat(6, 1fr)', gap:12, alignItems:'end'}}>
+            <div
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'minmax(220px, 2fr) 1fr 1fr 8ch 10ch auto',
+                    gap: 12,
+                    alignItems: 'end',
+                }}
+            >
                 <label>Room Type
-                    <select value={roomTypeId} onChange={e=>setRoomTypeId(Number(e.target.value))}>
+                    <select
+                        value={roomTypeId}
+                        onChange={e => setRoomTypeId(Number(e.target.value))}
+                        style={{width: '100%', minHeight: 34}}
+                    >
                         {roomTypes.map(rt => (
                             <option key={rt.id} value={rt.id}>
                                 {rt.name}{rt.code ? ` (${rt.code})` : ''}
@@ -90,37 +101,46 @@ export default function AvailabilityPage() {
                 </label>
 
                 <label>From
-                    <input type="date" value={from} onChange={e=>setFrom(e.target.value)}/>
+                    <input type="date" value={from} onChange={e => setFrom(e.target.value)} style={{width: '100%'}}/>
                 </label>
+
                 <label>To
-                    <input type="date" value={to} onChange={e=>setTo(e.target.value)}/>
+                    <input type="date" value={to} onChange={e => setTo(e.target.value)} style={{width: '100%'}}/>
                 </label>
+
                 <label>Nights (optional)
-                    <input type="number" min={1} value={nights} onChange={e=>setNights(e.target.value)} />
+                    <input
+                        type="number"
+                        min={1}
+                        value={nights}
+                        onChange={e => setNights(e.target.value)}
+                        style={{width: '100%'}}
+                    />
                 </label>
+
                 <label>Min capacity
-                    <input type="number" min={1} value={minCapacity} onChange={e=>setMinCapacity(Number(e.target.value))}/>
+                    <input
+                        type="number"
+                        min={1}
+                        value={minCapacity}
+                        onChange={e => setMinCapacity(Number(e.target.value))}
+                        style={{width: '100%'}}
+                    />
                 </label>
-                <button onClick={search} disabled={loading || !from || !to || roomTypeId === 0}>Search</button>
+
+                <button onClick={search} disabled={loading || !from || !to || roomTypeId === 0}>
+                    Search
+                </button>
             </div>
 
-            <div style={{marginTop:16, display:'grid', gridTemplateColumns:'1fr 1fr', gap:12}}>
-                <label>Guest name
-                    <input value={guestName} onChange={e=>setGuestName(e.target.value)} />
-                </label>
-                <label>Guest email
-                    <input value={email} onChange={e=>setEmail(e.target.value)} type="email"/>
-                </label>
-            </div>
+            {err && <div style={{color: 'crimson', marginTop: 12}}>{err}</div>}
+            {msg && <div style={{color: 'green', marginTop: 12}}>{msg}</div>}
 
-            {err && <div style={{color:'crimson', marginTop:12}}>{err}</div>}
-            {msg && <div style={{color:'green', marginTop:12}}>{msg}</div>}
-
-            <div style={{marginTop:16}}>
+            <div style={{marginTop: 16}}>
                 {loading ? 'Loading…' : (
-                    <table width="100%" cellPadding={6} style={{borderCollapse:'collapse'}}>
+                    <table width="100%" cellPadding={6} style={{borderCollapse: 'collapse'}}>
                         <thead>
-                        <tr style={{borderBottom:'1px solid #ddd'}}>
+                        <tr style={{borderBottom: '1px solid #ddd'}}>
                             <th align="left">Start</th>
                             <th align="left">End</th>
                             <th>Nights</th>
@@ -130,15 +150,19 @@ export default function AvailabilityPage() {
                         </thead>
                         <tbody>
                         {terms.map((t, idx) => (
-                            <tr key={idx} style={{borderBottom:'1px solid #f0f0f0'}}>
+                            <tr key={idx} style={{borderBottom: '1px solid #f0f0f0'}}>
                                 <td>{t.startDate}</td>
                                 <td>{t.endDate}</td>
                                 <td align="center">{t.nights}</td>
                                 <td align="right">{t.totalPrice}</td>
-                                <td align="right"><button onClick={()=>reserve(t)}>Reserve</button></td>
+                                <td align="right">
+                                    <button onClick={() => reserve(t)}>Reserve</button>
+                                </td>
                             </tr>
                         ))}
-                        {terms.length === 0 && !loading && <tr><td colSpan={5}>No results</td></tr>}
+                        {terms.length === 0 && !loading && <tr>
+                            <td colSpan={5}>No results</td>
+                        </tr>}
                         </tbody>
                     </table>
                 )}
