@@ -25,4 +25,8 @@ final class RoomTypeRepository extends ServiceEntityRepository implements RoomTy
         }
         return $rt;
     }
+
+    public function findAll(): array{
+        return parent::findAll();
+    }
 }

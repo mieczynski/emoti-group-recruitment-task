@@ -7,6 +7,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'room_types')]
@@ -15,15 +16,19 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 class RoomType
 {
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['roomtype:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100, unique: true)]
+    #[Groups(['roomtype:read'])]
     private string $name;
 
     #[ORM\Column(length: 32, unique: true, nullable: true)]
+    #[Groups(['roomtype:read'])]
     private ?string $code = null;
 
     #[ORM\Column(type: 'datetime_immutable')]

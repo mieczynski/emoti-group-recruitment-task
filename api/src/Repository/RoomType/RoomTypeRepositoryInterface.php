@@ -8,4 +8,5 @@ use App\Entity\RoomType;
 interface RoomTypeRepositoryInterface
 {
     public function getById(int $id): RoomType;
+    public function findAll(): array;
 }
