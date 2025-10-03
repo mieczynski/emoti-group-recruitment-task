@@ -17,3 +17,9 @@ A Dockerized demo stack:
 ```bash
 chmod +x run.sh
 ./run.sh up
+
+TODO
+- add unit tests
+- add endpoints to remove reservations
+- add pagination
+- add token refresh
